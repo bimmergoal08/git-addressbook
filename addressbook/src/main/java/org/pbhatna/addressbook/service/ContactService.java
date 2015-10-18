@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.pbhatna.addressbook.database.DatabaseClass;
 import org.pbhatna.addressbook.model.Contact;
 
 public class ContactService {
-	
+	//Dummy Data
 	private Map<Long,Contact> contacts = DatabaseClass.getContacts();
 	
 	public ContactService() {

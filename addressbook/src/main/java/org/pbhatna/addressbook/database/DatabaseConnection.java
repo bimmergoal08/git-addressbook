@@ -2,93 +2,35 @@ package org.pbhatna.addressbook.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseConnection {
 	
-	public static String getDateTime() throws Exception {
-		
-		PreparedStatement stmt = null;
-		String myString = null;
-		String returnString = null;
-		Connection conn = null;
-		ResultSet rs = null;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			
-			String connectionUrl = "jdbc:mysql://localhost";
-			String connectionUser = "root";
-			String connectionPassword = "";
-				
-			conn = DriverManager.getConnection(connectionUrl, connectionUser, connectionPassword);
-			
-			stmt = conn.prepareStatement("SELECT NOW()");
-			rs = stmt.executeQuery();
-			
-			while(rs.next()) {
-				myString = rs.getString("NOW()");
-				System.out.println("myString"+myString);
-			}
-			
-			returnString = "<p> Database Status :</p>" + "<p>"+ myString + "</p>";
-			
-			rs.close();
-			stmt.close();
-			conn.close();
-			
-			System.out.println("Yay It works");
-			
-		} catch (ClassNotFoundException classNotFound) {
-			System.out.println("JDBC driver class not found.");
-			throw new Exception("JDBC driver class not found.", classNotFound);
-		} catch (SQLException e) {
-			System.out.println("SQLException.");
-			throw new Exception("SQLException", e);
-		} finally {
-			closeConnections(rs,stmt, conn);
-		}
-		System.out.println("returnString"+returnString);
-		return returnString;
-	}
+	private static final transient Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
 	
-	private static void closeConnections(
-			ResultSet rs, 
-			PreparedStatement stmt, 
-			Connection conn
-	) {
-		if (rs != null) {
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	private static final String DRIVER = "com.mysql.jdbc.Driver";
+	private static final String CONNECTION_URL = "jdbc:mysql://localhost/Contacts";
+	private static final String CONNECTION_USER = "root";
+	private static final String CONNECTION_PASSWORD = "";
+	
+	public static Connection getConnection() throws Exception {
 
-		if (stmt != null) {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (conn != null) {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	public static void main(String args[]) {
+		Connection conn = null;
 		try {
-			getDateTime();
-		} catch (Exception e) {
-			e.printStackTrace();
+			Class.forName(DRIVER);
+			conn = DriverManager.getConnection(CONNECTION_URL, CONNECTION_USER, CONNECTION_PASSWORD);
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("JDBC driver class not found :");
+			throw new Exception("JDBC driver class not found :" + e.getMessage());
+		} catch (SQLException e) {
+			logger.error("SQLException :" + e.getMessage());
+			throw new Exception("SQLException :", e);
 		}
-		
+		logger.info("Connection Successful:");
+		return conn;
 	}
 }

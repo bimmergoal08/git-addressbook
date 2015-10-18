@@ -1,4 +1,4 @@
-package org.pbhatna.addressbook.database;
+package org.pbhatna.addressbook.service;
 
 import java.util.HashMap;
 import java.util.Map;

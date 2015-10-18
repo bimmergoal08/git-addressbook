@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Contact {
 	
-	private long contactId;
+	private Long contactId;
 	private String firstName;
 	private String lastName;
 	private String primaryPhoneNumber;
@@ -33,11 +33,11 @@ public class Contact {
 		this.primaryEmailAddress = primaryEmailAddress;
 	}
 
-	public long getContactId() {
+	public Long getContactId() {
 		return contactId;
 	}
 	
-	public void setContactId(long contactId) {
+	public void setContactId(Long contactId) {
 		this.contactId = contactId;
 	}
 	
