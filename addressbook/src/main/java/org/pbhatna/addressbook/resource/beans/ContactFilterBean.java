@@ -1,8 +1,12 @@
 package org.pbhatna.addressbook.resource.beans;
 
 import javax.ws.rs.QueryParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ContactFilterBean {
+	
+	private static final transient Logger logger = LoggerFactory.getLogger(ContactFilterBean.class);
 	
 	private @QueryParam("firstName") String firstName;
 	private @QueryParam("lastName") String lastName;
@@ -52,6 +56,7 @@ public class ContactFilterBean {
 		boolean valid = false;
 		if (firstName != null && !firstName.isEmpty()) {
 			valid = true;
+			logger.debug("firstNameValid" + valid);
 		}
 		return valid;
 	}
@@ -60,6 +65,7 @@ public class ContactFilterBean {
 		boolean valid = false;
 		if (lastName != null && !lastName.isEmpty()) {
 			valid = true;
+			logger.debug("lastNameValid" + valid);
 		}
 		return valid;
 	}
@@ -68,6 +74,7 @@ public class ContactFilterBean {
 		boolean valid = false;
 		if (email != null && !email.isEmpty()) {
 			valid = true;
+			logger.debug("emailValid" + valid);
 		}
 		return valid;
 	}
@@ -76,6 +83,7 @@ public class ContactFilterBean {
 		boolean valid = false;
 		if (address != null && !address.isEmpty()) {
 			valid = true;
+			logger.debug("addressValid" + valid);
 		}
 		return valid;
 	}
@@ -84,6 +92,7 @@ public class ContactFilterBean {
 		boolean valid = false;
 		if (phone != null && !phone.isEmpty()) {
 			valid = true;
+			logger.debug("phoneValid" + valid);
 		}
 		return valid;
 	}

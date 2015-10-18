@@ -124,13 +124,13 @@ public class ContactService {
 			return addStatus;
 	}
 	
-	public Contact getContact(Long id) throws Exception {
+	public Contact getContact(Long id) {
 		
 			PreparedStatement stmt = null;
 			Connection conn = null;
 			ResultSet rs = null;
 			String query = null;
-			Contact contact = new Contact();
+			Contact contact = null;
 			
 			try {
 				conn = DatabaseConnection.getConnection();
@@ -140,22 +140,21 @@ public class ContactService {
 				rs = stmt.executeQuery();
 				
 				if (rs.next()) {
+					contact = new Contact();
 					contact.setContactId(rs.getLong("PersonID"));
 					contact.setFirstName(rs.getString("FirstName"));
 					contact.setLastName(rs.getString("LastName"));
 					contact.setPrimaryAddress(rs.getString("PrimaryAddress"));
 					contact.setPrimaryEmailAddress(rs.getString("PrimaryEmail"));
 					contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));
-				} else {
-					throw new Exception("Contact Not found!!");
-				}
+				} 
 			} catch (SQLException e) {
+				logger.error("SQLException :"+ id + e.getMessage());
+			} catch (Exception e) {
 				logger.error("Error getting contact id"+ id + e.getMessage());
-				throw new Exception("Error getting contact id"+ id + e.getMessage());
 			} finally {
 				closeConnections(rs,stmt, conn);
 			}
-			logger.info("Contacts retrived successfully with the contact id :"+ id.toString());
 			return contact;
 		}
 	

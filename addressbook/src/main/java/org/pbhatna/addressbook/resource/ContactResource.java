@@ -7,15 +7,17 @@ import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.pbhatna.addressbook.dao.ContactService;
+import org.pbhatna.addressbook.exception.DataNotFoundException;
 import org.pbhatna.addressbook.model.Contact;
 import org.pbhatna.addressbook.resource.beans.ContactFilterBean;
 import org.slf4j.Logger;
@@ -34,18 +36,19 @@ public class ContactResource {
 	@GET
 	public Collection<Contact> getContacts(@BeanParam ContactFilterBean contactFilterBean) throws Exception {		
 		if (contactFilterBean.searchCriteriaEnabled()) {
-		
+			
 		} 
 		return contactService.getContacts();
 	}
 	
 	@GET
 	@Path("/{contactId}")
-	public Contact getContact(@PathParam("contactId")Long contactId) throws Exception {
-		if (contactId == null) {
-			throw new BadRequestException();
+	public Contact getContact(@PathParam("contactId")long contactId) {
+		Contact contact = contactService.getContact(contactId);
+		if (contact == null) {
+			throw new DataNotFoundException("Contact with contact id "+ contactId +" not found");
 		}
-		return contactService.getContact(contactId);
+		return contact;
 	}
 	
 	@POST
@@ -69,9 +72,9 @@ public class ContactResource {
 	@DELETE
 	@Path("/{contactId}")
 	public boolean removeContact(@PathParam("contactId")Long contactId) throws Exception {
-		if(contactId == null){
-            throw new NotFoundException();
-        }
+		if (contactId == null) {
+			throw new DataNotFoundException("Contact with contact id "+ contactId + "not found.");
+		}
 		return contactService.removeContact(contactId);
 	}
 }
