@@ -21,14 +21,13 @@ import org.pbhatna.addressbook.resource.beans.ContactFilterBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @Path("/contacts")
+//To do : Check header type and format your response accordingly
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ContactResource {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ContactResource.class);
-
+	private static final transient Logger logger = LoggerFactory.getLogger(ContactResource.class);
 	
 	ContactService contactService = new ContactService();
 	
@@ -42,21 +41,18 @@ public class ContactResource {
 	
 	@GET
 	@Path("/{contactId}")
-	public Contact getContact(@PathParam("contactId")Long contactId) {
+	public Contact getContact(@PathParam("contactId")Long contactId) throws Exception {
 		if (contactId == null) {
 			throw new BadRequestException();
 		}
-		
-		return null;
-		
+		return contactService.getContact(contactId);
 	}
 	
 	@POST
-	public Contact addContact(Contact contact) throws Exception {
-		if (contact.getContactId() == null) {
-			throw new BadRequestException();
-		}
-		return contact;
+	public boolean addContact(Contact contact) throws Exception {
+		logger.info(contact.toString());
+		
+		return contactService.addContact(contact);
 	}
 	
 	@PUT
@@ -75,12 +71,11 @@ public class ContactResource {
 		
 	@DELETE
 	@Path("/{contactId}")
-	public Contact removeContact(@PathParam("contactId")Long contactId) {
+	public boolean removeContact(@PathParam("contactId")Long contactId) throws Exception {
 		if(contactId == null){
             throw new NotFoundException();
         }
-		return null;
-//		return contactService.removeContact(contactId);
+		return contactService.removeContact(contactId);
 	}
 }
 	

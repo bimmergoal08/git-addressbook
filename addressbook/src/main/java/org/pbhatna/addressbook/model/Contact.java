@@ -17,7 +17,7 @@ public class Contact {
 	}
 	
 	public Contact(
-			long contactId,
+			Long contactId,
 			String firstName,
 			String lastName,
 			String primaryPhoneNumber,

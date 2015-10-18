@@ -6,7 +6,7 @@ public class ContactFilterBean {
 	
 	private @QueryParam("firstName") String firstName;
 	private @QueryParam("lastName") String lastName;
-	private @QueryParam("id") long id;
+	private @QueryParam("id") Long id;
 	private @QueryParam("phone") String phone;
 	private @QueryParam("email") String email;
 	private @QueryParam("address") String address;
@@ -23,10 +23,10 @@ public class ContactFilterBean {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getPhone() {
