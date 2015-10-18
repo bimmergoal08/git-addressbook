@@ -24,10 +24,10 @@ public class ContactService {
 		String query = null;
 		Collection<Contact> contacts = new ArrayList<Contact>();
 		
+		int counter = 0;
 		try {
 			conn = DatabaseConnection.getConnection();
-			query = "Select PersonID, FirstName, LastName, PrimaryAddress, PrimaryEmail, PrimaryPhone "+
-					"From Persons";
+			query = "Select * From Persons";
 			
 			stmt = conn.prepareStatement(query);
 			rs = stmt.executeQuery();
@@ -41,6 +41,7 @@ public class ContactService {
 				contact.setPrimaryEmailAddress(rs.getString("PrimaryEmail"));
 				contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));
 				contacts.add(contact);
+				counter ++;
 			}
 			
 		} catch (SQLException e){
@@ -49,22 +50,23 @@ public class ContactService {
 		} finally {
 			closeConnections(rs,stmt, conn);
 		}
+		logger.debug(counter + " rows processed");
 		logger.info("All contacts retrived successfully :");
 		return contacts;
 	}
 	
-	public boolean addContact(Contact contact) throws Exception {
+	public boolean updateContact(Contact contact) throws Exception {
 		
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		String query = null;
-		boolean addStatus = false;
+		boolean updateStatus = false;
 		
 		try {
 			conn = DatabaseConnection.getConnection();
-			query = "INSERT INTO Persons (FirstName, LastName, PrimaryAddress, PrimaryEmail, PrimaryPhone)"+
-					"VALUES (?,?,?,?,?);";
+			query = "UPDATE Persons SET FirstName = ?,LastName = ?,"+ 
+					"PrimaryAddress = ?,PrimaryEmail = ? ,PrimaryPhone= ? where PersonID = ?";
 			
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, contact.getFirstName());
@@ -72,18 +74,54 @@ public class ContactService {
 			stmt.setString(3, contact.getPrimaryAddress());
 			stmt.setString(4, contact.getPrimaryEmailAddress());
 			stmt.setString(5, contact.getPrimaryPhoneNumber());
-			stmt.executeUpdate();
-//			if (count > 0) {
-//				addStatus = true;
-//			} 
-		} catch (SQLException e){
-			logger.error("Error adding contact :"+ e.getMessage());
-			throw new Exception("Error adding contact :"+ e.getMessage());
+			stmt.setLong(6, contact.getContactId().longValue());
+			
+			int count = stmt.executeUpdate();
+			if (count > 0) {
+				updateStatus = true;
+			}
+			
+		} catch (SQLException e) {
+			logger.error("Error updating contact :"+ e.getMessage());
+			throw new Exception("Error updating contact :"+ e.getMessage());
 		} finally {
 			closeConnections(rs,stmt, conn);
 		}
-		logger.info("Contact inserted successfully:");
-		return addStatus;
+		logger.info("Contact updated successfully:");
+		return updateStatus;
+	}
+	
+	public boolean addContact(Contact contact) throws Exception {
+			
+			PreparedStatement stmt = null;
+			Connection conn = null;
+			ResultSet rs = null;
+			String query = null;
+			boolean addStatus = false;
+			
+			try {
+				conn = DatabaseConnection.getConnection();
+				query = "INSERT INTO Persons (FirstName, LastName, PrimaryAddress, PrimaryEmail, PrimaryPhone)"+
+						"VALUES (?,?,?,?,?);";
+				
+				stmt = conn.prepareStatement(query);
+				stmt.setString(1, contact.getFirstName());
+				stmt.setString(2, contact.getLastName());
+				stmt.setString(3, contact.getPrimaryAddress());
+				stmt.setString(4, contact.getPrimaryEmailAddress());
+				stmt.setString(5, contact.getPrimaryPhoneNumber());
+				int count = stmt.executeUpdate();
+				if (count > 0) {
+					addStatus = true;
+				} 
+			} catch (SQLException e){
+				logger.error("Error adding contact :"+ e.getMessage());
+				throw new Exception("Error adding contact :"+ e.getMessage());
+			} finally {
+				closeConnections(rs,stmt, conn);
+			}
+			logger.info("Contact inserted successfully:");
+			return addStatus;
 	}
 	
 	public Contact getContact(Long id) throws Exception {
@@ -96,9 +134,9 @@ public class ContactService {
 			
 			try {
 				conn = DatabaseConnection.getConnection();
-				query = "select * from Persons where PersonID = ? ";
+				query = "Select * From Persons where PersonID=?";
 				stmt = conn.prepareStatement(query);
-				stmt.setString(1, id.toString());
+				stmt.setLong(1, id.longValue());
 				rs = stmt.executeQuery();
 				
 				if (rs.next()) {
@@ -131,7 +169,7 @@ public class ContactService {
 		
 		try {
 			conn = DatabaseConnection.getConnection();
-			query = "delete from Persons where PersonID = ? ";
+			query = "delete from Persons where PersonID=?";
 			stmt = conn.prepareStatement(query);
 			stmt.setLong(1, id.longValue());
 				

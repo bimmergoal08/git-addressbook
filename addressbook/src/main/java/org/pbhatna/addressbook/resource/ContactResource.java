@@ -57,16 +57,13 @@ public class ContactResource {
 	
 	@PUT
 	@Path("/{contactId}")
-	public Contact updateContact(@PathParam("contactId")Long contactId, Contact contact) {
+	public boolean updateContact(@PathParam("contactId")Long contactId, Contact contact) throws Exception {
 		// check for null contact id
 		if (contactId == null) {
 			throw new BadRequestException();
-		}
-		// Check if id is valid
-		
+		}		
 		contact.setContactId(contactId.longValue());
-		//return contactService.updateContact(contact);
-		return contact;
+		return contactService.updateContact(contact);
 	}
 		
 	@DELETE
