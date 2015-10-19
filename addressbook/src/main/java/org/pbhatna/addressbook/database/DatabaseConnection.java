@@ -22,7 +22,6 @@ public class DatabaseConnection {
 		try {
 			Class.forName(DRIVER);
 			conn = DriverManager.getConnection(CONNECTION_URL, CONNECTION_USER, CONNECTION_PASSWORD);
-			
 		} catch (ClassNotFoundException e) {
 			logger.error("JDBC driver class not found :");
 			throw new Exception("JDBC driver class not found :" + e.getMessage());
@@ -30,7 +29,6 @@ public class DatabaseConnection {
 			logger.error("SQLException :" + e.getMessage());
 			throw new Exception("SQLException :", e);
 		}
-		logger.info("Connection Successful:");
 		return conn;
 	}
 }

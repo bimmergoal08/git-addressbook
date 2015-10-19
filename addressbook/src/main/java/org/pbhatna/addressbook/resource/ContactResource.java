@@ -1,5 +1,6 @@
 package org.pbhatna.addressbook.resource;
 
+import java.net.URI;
 import java.util.Collection;
 
 import javax.ws.rs.BadRequestException;
@@ -12,9 +13,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.pbhatna.addressbook.dao.ContactService;
 import org.pbhatna.addressbook.exception.DataNotFoundException;
@@ -34,9 +35,13 @@ public class ContactResource {
 	ContactService contactService = new ContactService();
 	
 	@GET
-	public Collection<Contact> getContacts(@BeanParam ContactFilterBean contactFilterBean) throws Exception {		
-		if (contactFilterBean.searchCriteriaEnabled()) {
-			
+	public Collection<Contact> getContacts(@BeanParam ContactFilterBean contactFilterBean) {
+	
+		if (contactFilterBean.isSearchEnabled()) {
+			return contactService.searchContacts(
+					contactFilterBean.getSearchCriteria(),
+					contactFilterBean.getSearchValue(contactFilterBean.getSearchCriteria())
+			);
 		} 
 		return contactService.getContacts();
 	}

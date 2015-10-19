@@ -1,12 +1,12 @@
 package org.pbhatna.addressbook.util;
 
 	public enum Search {
-		FIRST_NAME("firstName"),
-		LAST_NAME("lastName"),
-		EMAIL_ADDRESS("email"),
-		ADDRESS("address"),
-		PHONE_NUMBER("phone"),
-		CONTACT_ID("id");
+		FIRST_NAME("FirstName"),
+		LAST_NAME("LastName"),
+		EMAIL_ADDRESS("PrimaryEmail"),
+		ADDRESS("PrimaryAddress"),
+		PHONE_NUMBER("PrimaryPhone"),
+		CONTACT_ID("PersonID");
 		
 		private String value;
 

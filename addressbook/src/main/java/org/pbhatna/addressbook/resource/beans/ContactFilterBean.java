@@ -1,6 +1,7 @@
 package org.pbhatna.addressbook.resource.beans;
-
 import javax.ws.rs.QueryParam;
+
+import org.pbhatna.addressbook.util.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,9 @@ public class ContactFilterBean {
 	private @QueryParam("phone") String phone;
 	private @QueryParam("email") String email;
 	private @QueryParam("address") String address;
+	private @QueryParam("start") String start;
+	private @QueryParam("size") String size;
+	
 	
 	public String getFirstName() {
 		return firstName;
@@ -52,60 +56,72 @@ public class ContactFilterBean {
 		this.address = address;
 	}
 	
-	public boolean firstNameValid() {
+	public boolean isSearchField(String fieldType) {
 		boolean valid = false;
-		if (firstName != null && !firstName.isEmpty()) {
+		
+		if (fieldType != null && !fieldType.isEmpty()) {
 			valid = true;
-			logger.debug("firstNameValid" + valid);
+			logger.debug(fieldType + ":" + valid);
 		}
 		return valid;
+	} 
+	
+	public String getSearchValue(String fieldType) {
+		String searchText = "";
+		
+		switch(fieldType) {
+			case "PersonID": 
+				searchText = getFirstName(); 
+				break;
+			case "FirstName": 
+				searchText = getFirstName(); 
+				break;
+			case "LastName": 
+				searchText = getLastName(); 
+				break;
+			case "PrimaryEmail": 
+				searchText = getEmail(); 
+				break;
+			case "PrimaryAddress": 
+				searchText = getAddress(); 
+				break;
+			case "PrimaryPhone": 
+				searchText = getPhone(); 
+				break;
+			}
+		return searchText;
 	}
 	
-	public boolean lastNameValid() {
-		boolean valid = false;
-		if (lastName != null && !lastName.isEmpty()) {
-			valid = true;
-			logger.debug("lastNameValid" + valid);
-		}
-		return valid;
-	}
 	
-	public boolean emailValid() {
-		boolean valid = false;
-		if (email != null && !email.isEmpty()) {
-			valid = true;
-			logger.debug("emailValid" + valid);
-		}
-		return valid;
-	}
-	
-	public boolean addressValid() {
-		boolean valid = false;
-		if (address != null && !address.isEmpty()) {
-			valid = true;
-			logger.debug("addressValid" + valid);
-		}
-		return valid;
-	}
-	
-	public boolean phoneValid() {
-		boolean valid = false;
-		if (phone != null && !phone.isEmpty()) {
-			valid = true;
-			logger.debug("phoneValid" + valid);
-		}
-		return valid;
-	}
-	
-	public boolean searchCriteriaEnabled() {
+	public boolean isSearchEnabled() {
 		boolean enabled = false;
-		if (firstNameValid() || lastNameValid() || emailValid()
-				|| addressValid() || phoneValid()) {
-			System.out.print("searchCriteriaEnabled"+ true);
+		if (isSearchField(firstName) || isSearchField(lastName) || isSearchField(email)
+				|| isSearchField(phone) || isSearchField(address)) {
+			logger.info("searchEnabled :"+ true);
 			enabled = true;
 		}
 		return enabled;
 	}
+	
+	public String getSearchCriteria() {
+		
+		String searchCriteria = "";
+		if (isSearchField(firstName)) {
+			searchCriteria = Search.FIRST_NAME.getValue();
+		} else if (isSearchField(lastName)) {
+			searchCriteria = Search.LAST_NAME.getValue();
+		} else if (isSearchField(email)) {
+			searchCriteria = Search.EMAIL_ADDRESS.getValue();
+		} else if (isSearchField(phone)) {
+			searchCriteria = Search.PHONE_NUMBER.getValue();
+		} else if (isSearchField(address)) {
+			searchCriteria = Search.ADDRESS.getValue();
+		}
+		
+		logger.info(searchCriteria);
+		return searchCriteria;
+	}
+	
 	@Override
 	public String toString() {
 		return "ContactFilterBean [firstName=" + firstName + ", lastName="
