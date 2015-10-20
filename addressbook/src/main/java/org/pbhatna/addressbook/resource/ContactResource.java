@@ -1,6 +1,5 @@
 package org.pbhatna.addressbook.resource;
 
-import java.net.URI;
 import java.util.Collection;
 
 import javax.ws.rs.BadRequestException;
@@ -13,21 +12,20 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.pbhatna.addressbook.dao.ContactService;
 import org.pbhatna.addressbook.exception.DataNotFoundException;
 import org.pbhatna.addressbook.model.Contact;
 import org.pbhatna.addressbook.resource.beans.ContactFilterBean;
+import org.pbhatna.addressbook.util.Order;
+import org.pbhatna.addressbook.util.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Path("/contacts")
-//To do : Check header type and format your response accordingly
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class ContactResource {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(ContactResource.class);
@@ -44,6 +42,13 @@ public class ContactResource {
 			);
 		} 
 		return contactService.getContacts();
+	}
+	
+	@GET
+	@Path("/sort")
+	public Collection<Contact> sortContacts(@BeanParam ContactFilterBean contactFilterBean) {	
+		return contactService.sortContacts(contactFilterBean.getSearchCriteria());
+		
 	}
 	
 	@GET

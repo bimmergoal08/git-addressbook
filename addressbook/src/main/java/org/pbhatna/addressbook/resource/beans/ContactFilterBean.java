@@ -17,6 +17,7 @@ public class ContactFilterBean {
 	private @QueryParam("address") String address;
 	private @QueryParam("start") String start;
 	private @QueryParam("size") String size;
+	private @QueryParam("sort") String sort;
 	
 	
 	public String getFirstName() {
@@ -55,7 +56,12 @@ public class ContactFilterBean {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+	public String getSort() {
+		return sort;
+	}
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
 	public boolean isSearchField(String fieldType) {
 		boolean valid = false;
 		
@@ -89,6 +95,7 @@ public class ContactFilterBean {
 				searchText = getPhone(); 
 				break;
 			}
+		logger.info(searchText);
 		return searchText;
 	}
 	
@@ -117,8 +124,6 @@ public class ContactFilterBean {
 		} else if (isSearchField(address)) {
 			searchCriteria = Search.ADDRESS.getValue();
 		}
-		
-		logger.info(searchCriteria);
 		return searchCriteria;
 	}
 	

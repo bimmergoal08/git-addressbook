@@ -9,7 +9,6 @@ import java.util.Collection;
 
 import org.pbhatna.addressbook.database.DatabaseConnection;
 import org.pbhatna.addressbook.model.Contact;
-import org.pbhatna.addressbook.util.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,23 +57,20 @@ public class ContactService {
 	}
 	
 	public Collection<Contact> searchContacts(String fieldType, String search) {
-		logger.info("fieldType "+ fieldType+ " search "+ search);
+		logger.info("searchContacts"+ "fieldType: "+fieldType+ " search: "+search);
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		String query = null;
+		String baseQuery = null;
 		Collection<Contact> contacts = new ArrayList<Contact>();
 		
 		int counter = 0;
 		try {
 			conn = DatabaseConnection.getConnection();
-			query = "SELECT * FROM Persons WHERE ? LIKE '%?%'";
-			
+			baseQuery = "SELECT * FROM Persons WHERE p1 LIKE ?";
+			String query = baseQuery.replace("p1", fieldType); 
 			stmt = conn.prepareStatement(query);
-			stmt.setString(1, fieldType);
-			stmt.setString(1, search);
-			
-
+			stmt.setString(1, "%"+ search +"%");	
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {	
@@ -97,9 +93,55 @@ public class ContactService {
 			closeConnections(rs,stmt, conn);
 		}
 		logger.info(counter + " rows processed");
-		logger.info("Retrieved Contacts with fieldtype :"+ fieldType +" and search criteria :"+ search);
 		return contacts;
 	}
+	
+	public Collection<Contact> sortContacts(String columnName) {
+		
+		logger.info("sortContacts"+ "fieldType: "+ columnName);
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String baseQuery = null;
+		Collection<Contact> contacts = new ArrayList<Contact>();
+		
+		int counter = 0;
+		try {
+			conn = DatabaseConnection.getConnection();
+			baseQuery = "SELECT * FROM Persons ORDER by p1 ASC";
+			
+			String query = baseQuery.replace("p1", columnName); 
+//			query =  baseQuery.replace("q1", order); 
+			
+			logger.info("------->"+ query);
+			stmt = conn.prepareStatement(query);	
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {	
+				Contact contact = new Contact();
+				contact.setContactId(rs.getLong("PersonID"));
+				contact.setFirstName(rs.getString("FirstName"));
+				contact.setLastName(rs.getString("LastName"));
+				contact.setPrimaryAddress(rs.getString("PrimaryAddress"));
+				contact.setPrimaryEmailAddress(rs.getString("PrimaryEmail"));
+				contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));
+				logger.info(contact.toString());			
+				
+				contacts.add(contact);
+				counter ++;
+			}
+			
+		} catch (SQLException e) {
+			logger.error("SQLException with fieldtype and search criteria :"+ e.getMessage());
+		} catch (Exception e) {
+			logger.error("Error retriveing contacts with fieldtype and search criteria: "+ e.getMessage());
+		} finally {
+			closeConnections(rs,stmt, conn);
+		}
+		logger.info(counter + " rows processed");
+		return contacts;
+	}
+	
 	
 	public boolean updateContact(Contact contact) throws Exception {
 		
