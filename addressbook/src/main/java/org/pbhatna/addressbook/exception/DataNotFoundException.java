@@ -6,6 +6,5 @@ public class DataNotFoundException extends RuntimeException {
 
 	public DataNotFoundException(String message) {
 		super(message);
-		System.out.println("08765--------###");
 	}
 }

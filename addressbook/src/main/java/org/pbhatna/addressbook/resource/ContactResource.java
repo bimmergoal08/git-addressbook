@@ -18,7 +18,6 @@ import org.pbhatna.addressbook.dao.ContactService;
 import org.pbhatna.addressbook.exception.DataNotFoundException;
 import org.pbhatna.addressbook.model.Contact;
 import org.pbhatna.addressbook.resource.beans.ContactFilterBean;
-import org.pbhatna.addressbook.util.Order;
 import org.pbhatna.addressbook.util.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,10 @@ public class ContactResource {
 	@GET
 	@Path("/sort")
 	public Collection<Contact> sortContacts(@BeanParam ContactFilterBean contactFilterBean) {	
-		return contactService.sortContacts(contactFilterBean.getSearchCriteria());
+		if (contactFilterBean.getSort() != null) {
+			return contactService.sortContacts(contactFilterBean.getSort());
+		}
+		return contactService.sortContacts(Search.CONTACT_ID.getValue());
 		
 	}
 	
@@ -63,7 +65,6 @@ public class ContactResource {
 	
 	@POST
 	public boolean addContact(Contact contact) throws Exception {
-		logger.info(contact.toString());
 		
 		return contactService.addContact(contact);
 	}

@@ -12,10 +12,10 @@ public class DataNotFoundExceptionMapper implements ExceptionMapper<DataNotFound
 	
 	@Override
 	public Response toResponse(DataNotFoundException exception) {
-		System.out.println("*********");
+		
 		ErrorMessage errorMessage = new ErrorMessage(404, exception.getMessage(), "http://pbhatna.org");
-		return Response.status(Status.ACCEPTED)
-				.entity(errorMessage)
-				.build();
+			return Response.status(Status.ACCEPTED)
+					.entity(errorMessage)
+					.build();
 	}
 }

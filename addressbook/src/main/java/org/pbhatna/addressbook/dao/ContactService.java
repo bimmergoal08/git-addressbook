@@ -21,15 +21,12 @@ public class ContactService {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		String query = null;
-		Collection<Contact> contacts = new ArrayList<Contact>();
 		
+		Collection<Contact> contacts = new ArrayList<Contact>();
 		int counter = 0;
 		try {
 			conn = DatabaseConnection.getConnection();
-			query = "Select * From Persons";
-			
-			stmt = conn.prepareStatement(query);
+			stmt = conn.prepareStatement("Select * From Persons");
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {	
@@ -45,19 +42,21 @@ public class ContactService {
 			}
 			
 		} catch (SQLException e){
-			logger.error("Error retriveing all contacts :" + e.getMessage());
+			logger.error("SQLException retriveing all contacts: " + e.getMessage());
 		} catch (Exception e) {
 			logger.error("Error retriveing all contacts :"+ e.getMessage());
 		}finally {
 			closeConnections(rs,stmt, conn);
 		}
 		logger.debug(counter + " rows processed");
-		logger.info("All contacts retrived successfully :");
+		logger.info("Get contacts results:" + contacts.toString());
 		return contacts;
 	}
-	
+
 	public Collection<Contact> searchContacts(String fieldType, String search) {
-		logger.info("searchContacts"+ "fieldType: "+fieldType+ " search: "+search);
+		
+	 	logger.info("searchContacts inputs: "+ "fieldType: "+ fieldType+ " search: "+search);
+		
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
@@ -70,7 +69,7 @@ public class ContactService {
 			baseQuery = "SELECT * FROM Persons WHERE p1 LIKE ?";
 			String query = baseQuery.replace("p1", fieldType); 
 			stmt = conn.prepareStatement(query);
-			stmt.setString(1, "%"+ search +"%");	
+			stmt.setString(1, "%"+search+"%");	
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {	
@@ -84,21 +83,22 @@ public class ContactService {
 				contacts.add(contact);
 				counter ++;
 			}
-			
 		} catch (SQLException e) {
-			logger.error("SQLException with fieldtype and search criteria :"+ e.getMessage());
+			logger.error("SQLException searching contacts :"+ e.getMessage());
 		} catch (Exception e) {
-			logger.error("Error retriveing contacts with fieldtype and search criteria: "+ e.getMessage());
+			logger.error("Error searching contacts :"+ e.getMessage());
 		} finally {
 			closeConnections(rs,stmt, conn);
 		}
 		logger.info(counter + " rows processed");
+		logger.info("Search contacts results:" + contacts.toString());
 		return contacts;
 	}
 	
 	public Collection<Contact> sortContacts(String columnName) {
 		
-		logger.info("sortContacts"+ "fieldType: "+ columnName);
+		logger.info("sortContacts inputs :"+ "columnName: "+ columnName);
+		
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
@@ -111,10 +111,7 @@ public class ContactService {
 			baseQuery = "SELECT * FROM Persons ORDER by p1 ASC";
 			
 			String query = baseQuery.replace("p1", columnName); 
-//			query =  baseQuery.replace("q1", order); 
-			
-			logger.info("------->"+ query);
-			stmt = conn.prepareStatement(query);	
+			stmt = conn.prepareStatement(query);
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {	
@@ -124,26 +121,25 @@ public class ContactService {
 				contact.setLastName(rs.getString("LastName"));
 				contact.setPrimaryAddress(rs.getString("PrimaryAddress"));
 				contact.setPrimaryEmailAddress(rs.getString("PrimaryEmail"));
-				contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));
-				logger.info(contact.toString());			
-				
+				contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));				
 				contacts.add(contact);
 				counter ++;
 			}
 			
 		} catch (SQLException e) {
-			logger.error("SQLException with fieldtype and search criteria :"+ e.getMessage());
+			logger.error("SQLException sorting contacts: "+ e.getMessage());
 		} catch (Exception e) {
-			logger.error("Error retriveing contacts with fieldtype and search criteria: "+ e.getMessage());
+			logger.error("Error sorting contacts: "+ e.getMessage());
 		} finally {
 			closeConnections(rs,stmt, conn);
 		}
 		logger.info(counter + " rows processed");
+		logger.info("Sorted contacts results:" + contacts.toString());
 		return contacts;
 	}
 	
 	
-	public boolean updateContact(Contact contact) throws Exception {
+	public boolean updateContact(Contact contact) {
 		
 		PreparedStatement stmt = null;
 		Connection conn = null;
@@ -170,16 +166,17 @@ public class ContactService {
 			}
 			
 		} catch (SQLException e) {
+			logger.error("SQLException updating contact :"+ e.getMessage());
+		} catch (Exception e) {
 			logger.error("Error updating contact :"+ e.getMessage());
-			throw new Exception("Error updating contact :"+ e.getMessage());
 		} finally {
 			closeConnections(rs,stmt, conn);
 		}
-		logger.info("Contact updated successfully:");
+		logger.info("updateStatus" + updateStatus);
 		return updateStatus;
 	}
 	
-	public boolean addContact(Contact contact) throws Exception {
+	public boolean addContact(Contact contact) {
 			
 			PreparedStatement stmt = null;
 			Connection conn = null;
@@ -203,12 +200,13 @@ public class ContactService {
 					addStatus = true;
 				} 
 			} catch (SQLException e){
+				logger.error("SQLException adding contact :"+ e.getMessage());
+			} catch (Exception e) {
 				logger.error("Error adding contact :"+ e.getMessage());
-				throw new Exception("Error adding contact :"+ e.getMessage());
 			} finally {
 				closeConnections(rs,stmt, conn);
 			}
-			logger.info("Contact inserted successfully:");
+			logger.info("addStatus:"+ addStatus);
 			return addStatus;
 	}
 	
@@ -217,13 +215,11 @@ public class ContactService {
 			PreparedStatement stmt = null;
 			Connection conn = null;
 			ResultSet rs = null;
-			String query = null;
 			Contact contact = null;
 			
 			try {
 				conn = DatabaseConnection.getConnection();
-				query = "Select * From Persons where PersonID=?";
-				stmt = conn.prepareStatement(query);
+				stmt = conn.prepareStatement("Select * From Persons where PersonID=?");
 				stmt.setLong(1, id.longValue());
 				rs = stmt.executeQuery();
 				
@@ -246,39 +242,34 @@ public class ContactService {
 			return contact;
 		}
 	
-	public boolean removeContact(Long id) throws Exception {
+	public boolean removeContact(Long id) {
 		
 		PreparedStatement stmt = null;
 		Connection conn = null;
-		String query = null;
 		ResultSet rs = null;
 		boolean deletedStatus = false;
 		
 		try {
 			conn = DatabaseConnection.getConnection();
-			query = "delete from Persons where PersonID=?";
-			stmt = conn.prepareStatement(query);
+			stmt = conn.prepareStatement("delete from Persons where PersonID=?");
 			stmt.setLong(1, id.longValue());
 				
 			if (stmt.execute()) {	
-				deletedStatus = true;	
-				logger.info("Contacts removed successfully with the contact id :"+ id.toString());
+				deletedStatus = true;
 			}
-			
 		} catch (SQLException e) {
-			logger.error("Error removing contact id : "+ id + e.getMessage());
-			throw new Exception("Error removing contact id"+ id + e.getMessage());
+			logger.error("SQLException removing contact id : "+ id + e.getMessage());
+		} catch (Exception e) {
+			logger.error("Exception removing contact id : "+ id + e.getMessage());
 		} finally {
 			closeConnections(rs,stmt, conn);
 		}
+		logger.info("deletedStatus :"+ deletedStatus);
 		return deletedStatus;
 	}
 	
-	private static void closeConnections(
-			ResultSet rs, 
-			PreparedStatement stmt, 
-			Connection conn
-	) {
+	private static void closeConnections(ResultSet rs, PreparedStatement stmt, Connection conn) {
+		
 		if (rs != null) {
 			try {
 				rs.close();

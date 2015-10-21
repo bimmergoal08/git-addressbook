@@ -15,8 +15,6 @@ public class ContactFilterBean {
 	private @QueryParam("phone") String phone;
 	private @QueryParam("email") String email;
 	private @QueryParam("address") String address;
-	private @QueryParam("start") String start;
-	private @QueryParam("size") String size;
 	private @QueryParam("sort") String sort;
 	
 	
@@ -131,7 +129,7 @@ public class ContactFilterBean {
 	public String toString() {
 		return "ContactFilterBean [firstName=" + firstName + ", lastName="
 				+ lastName + ", id=" + id + ", phone=" + phone + ", email="
-				+ email + ", address=" + address + "]";
+				+ email + ", address=" + address + ", sort=" + sort + "]";
 	}
 	
 }

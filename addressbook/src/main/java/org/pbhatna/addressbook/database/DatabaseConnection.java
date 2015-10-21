@@ -26,8 +26,8 @@ public class DatabaseConnection {
 			logger.error("JDBC driver class not found :");
 			throw new Exception("JDBC driver class not found :" + e.getMessage());
 		} catch (SQLException e) {
-			logger.error("SQLException :" + e.getMessage());
-			throw new Exception("SQLException :", e);
+			logger.error("SQLException connecting to the database :" + e.getMessage());
+			throw new Exception("SQLException connecting to the database :", e);
 		}
 		return conn;
 	}
