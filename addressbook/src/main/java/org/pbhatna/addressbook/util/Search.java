@@ -1,6 +1,7 @@
 package org.pbhatna.addressbook.util;
 
 	public enum Search {
+		
 		FIRST_NAME("FirstName"),
 		LAST_NAME("LastName"),
 		EMAIL_ADDRESS("PrimaryEmail"),
@@ -18,5 +19,3 @@ package org.pbhatna.addressbook.util;
 			return value;
 		}
 	};
-
-

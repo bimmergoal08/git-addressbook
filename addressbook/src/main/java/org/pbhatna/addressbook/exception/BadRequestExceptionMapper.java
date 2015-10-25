@@ -8,18 +8,18 @@ import javax.ws.rs.ext.Provider;
 import org.pbhatna.addressbook.model.ErrorMessage;
 
 @Provider
-public class DataNotFoundExceptionMapper implements ExceptionMapper<DataNotFoundException> {
+public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestException> {
 	
 	private static final String DOCUMENTATION_URL = "http://pbhatna.org";
 	
 	@Override
-	public Response toResponse(DataNotFoundException exception) {
+	public Response toResponse(BadRequestException exception) {
 		
-		ErrorMessage errorMessage = new ErrorMessage(Status.NOT_FOUND.getStatusCode(), 
+		ErrorMessage errorMessage = new ErrorMessage(Status.BAD_REQUEST.getStatusCode(), 
 				exception.getMessage(),
 				DOCUMENTATION_URL);
 		
-		return Response.status(Status.NOT_FOUND)
+		return Response.status(Status.BAD_REQUEST)
 				.entity(errorMessage)
 				.build();
 	}

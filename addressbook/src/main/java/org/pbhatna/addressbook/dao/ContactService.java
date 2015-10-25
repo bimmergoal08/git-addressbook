@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.pbhatna.addressbook.database.DatabaseConnection;
 import org.pbhatna.addressbook.model.Contact;
@@ -16,13 +17,13 @@ public class ContactService {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(ContactService.class);
 	
-	public Collection<Contact> getContacts() {
+	public List<Contact> getContacts() {
 		
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		
-		Collection<Contact> contacts = new ArrayList<Contact>();
+		List<Contact> contacts = new ArrayList<Contact>();
 		int counter = 0;
 		try {
 			conn = DatabaseConnection.getConnection();
@@ -53,7 +54,7 @@ public class ContactService {
 		return contacts;
 	}
 
-	public Collection<Contact> searchContacts(String fieldType, String search) {
+	public List<Contact> searchContacts(String fieldType, String search) {
 		
 	 	logger.info("searchContacts inputs: "+ "fieldType: "+ fieldType+ " search: "+search);
 		
@@ -61,7 +62,7 @@ public class ContactService {
 		Connection conn = null;
 		ResultSet rs = null;
 		String baseQuery = null;
-		Collection<Contact> contacts = new ArrayList<Contact>();
+		List<Contact> contacts = new ArrayList<Contact>();
 		
 		int counter = 0;
 		try {
@@ -95,22 +96,30 @@ public class ContactService {
 		return contacts;
 	}
 	
-	public Collection<Contact> sortContacts(String columnName) {
+	public Collection<Contact> sortContacts(String columnName, String orderBy) {
 		
-		logger.info("sortContacts inputs :"+ "columnName: "+ columnName);
+		logger.info("sortContacts inputs :"+ "columnName: "+ columnName + "orderBy: " + orderBy);
 		
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		String baseQuery = null;
+		String query = null;
 		Collection<Contact> contacts = new ArrayList<Contact>();
 		
 		int counter = 0;
 		try {
 			conn = DatabaseConnection.getConnection();
-			baseQuery = "SELECT * FROM Persons ORDER by p1 ASC";
+			if (orderBy != null) {
+				baseQuery = "SELECT * FROM Persons ORDER by p1 q1";
+				query = baseQuery.replace("p1", columnName);
+				query = query.replace("q1", orderBy);
+				logger.info("query"+ query.toString());
+			} else {
+				baseQuery = "SELECT * FROM Persons ORDER by p1 ASC";
+				query = baseQuery.replace("p1", columnName);
+			}
 			
-			String query = baseQuery.replace("p1", columnName); 
 			stmt = conn.prepareStatement(query);
 			rs = stmt.executeQuery();
 			
