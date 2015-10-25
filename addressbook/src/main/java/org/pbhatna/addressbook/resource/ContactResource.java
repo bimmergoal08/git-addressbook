@@ -16,12 +16,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.pbhatna.addressbook.dao.ContactService;
 import org.pbhatna.addressbook.exception.BadRequestException;
 import org.pbhatna.addressbook.exception.DataNotFoundException;
 import org.pbhatna.addressbook.model.Contact;
+import org.pbhatna.addressbook.model.SuccessMessage;
 import org.pbhatna.addressbook.resource.beans.ContactSortBean;
 import org.pbhatna.addressbook.util.InputParameter;
 import org.pbhatna.addressbook.util.ResourceHelper;
@@ -34,11 +36,14 @@ import org.slf4j.LoggerFactory;
 public class ContactResource {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(ContactResource.class);
-	    
+	
+	@Context
+    private UriInfo uriInfo;
+	
     ContactService contactService = new ContactService();
 	
 	@GET
-	public Collection<Contact> getContacts(@Context UriInfo uriInfo) {
+	public List<Contact> getContacts() {
 		List<Contact> contacts = null;
 	
 		MultivaluedMap<String, String> queryParameterMap = uriInfo.getQueryParameters();
@@ -93,28 +98,45 @@ public class ContactResource {
 	}
 	
 	@POST
-	public boolean addContact(Contact contact) throws Exception {
-		return contactService.addContact(contact);
+	public Response addContact(Contact contact) {
+		if (contact == null) {
+			throw new BadRequestException("Invalid contact! Can't be added :");
+		}
+		boolean addSuccess = true;
+		addSuccess = contactService.addContact(contact);	
+		if (!addSuccess) {
+			throw new BadRequestException("Request failed! Please Make sure request is not duplicate :");
+		}
+		
+		SuccessMessage successMessage = new SuccessMessage(
+				Status.CREATED.getStatusCode(), "Contact added successfully :");
+		return Response.status(Status.CREATED).entity(successMessage).build();
 	}
 	
 	@PUT
 	@Path("/{contactId}")
-	public boolean updateContact(@PathParam("contactId")Long contactId, Contact contact) throws Exception {
+	public Response updateContact(@PathParam("contactId")Long contactId, Contact contact) {
 		// check for null contact id
 		if (contactId == null) {
-			throw new BadRequestException("nulla");
+			throw new BadRequestException("Contact can not be updated for the contact id: "+ contactId);
 		}		
 		contact.setContactId(contactId.longValue());
-		return contactService.updateContact(contact);
+		contactService.updateContact(contact);
+		SuccessMessage successMessage = new SuccessMessage(
+				Status.OK.getStatusCode(), "Contact updated successfully :");	
+		return Response.status(Status.OK).entity(successMessage).build();
 	}
 		
 	@DELETE
 	@Path("/{contactId}")
-	public boolean removeContact(@PathParam("contactId")Long contactId) throws Exception {
+	public Response removeContact(@PathParam("contactId")Long contactId) {
 		if (contactId == null) {
 			throw new DataNotFoundException("Contact with contact id "+ contactId + "not found.");
 		}
-		return contactService.removeContact(contactId);
+		contactService.removeContact(contactId);
+		SuccessMessage successMessage = new SuccessMessage(
+				Status.NO_CONTENT.getStatusCode(), "Contact deleted successfully :");	
+		return Response.status(Status.NO_CONTENT).entity(successMessage).build();
 	}
 }
 	

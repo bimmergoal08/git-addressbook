@@ -15,4 +15,12 @@
         <servlet-name>Jersey Web Application</servlet-name>
         <url-pattern>/v1/*</url-pattern>
     </servlet-mapping>
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>org.pbhatna.addressbook.authentication.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/v1/*</url-pattern>
+  </filter-mapping>
 </web-app>
