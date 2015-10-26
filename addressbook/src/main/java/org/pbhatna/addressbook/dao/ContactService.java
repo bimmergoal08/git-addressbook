@@ -263,7 +263,8 @@ public class ContactService {
 			stmt = conn.prepareStatement("delete from Persons where PersonID=?");
 			stmt.setLong(1, id.longValue());
 				
-			if (stmt.execute()) {	
+			int count = stmt.executeUpdate();
+			if (count > 0) {
 				deletedStatus = true;
 			}
 		} catch (SQLException e) {

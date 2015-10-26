@@ -74,6 +74,7 @@ public class ContactResource {
 			// return all the contacts available in the addressbook if not criteria is specified
 			contacts =  contactService.getContacts();
 		}
+		logger.debug("Get contacts success :");
 		return contacts;
 	}
 	
@@ -84,6 +85,7 @@ public class ContactResource {
 		if (contact == null) {
 			throw new DataNotFoundException("Contact with contact id "+ contactId +" not found");
 		}
+		logger.debug("Get contact success :");
 		return Response.status(Response.Status.FOUND).entity(contact).build();
 	}
 	
@@ -94,6 +96,7 @@ public class ContactResource {
 			throw new BadRequestException("Invalid sort criteria for :" + contactSortBean.getSort() + 
 					" and orderby :" + contactSortBean.getOrder());
 		}
+		logger.debug("Sort contact success :");
 		return contactService.sortContacts(contactSortBean.getSort(), contactSortBean.getOrder());
 	}
 	
@@ -110,20 +113,28 @@ public class ContactResource {
 		
 		SuccessMessage successMessage = new SuccessMessage(
 				Status.CREATED.getStatusCode(), "Contact added successfully :");
+		
+		logger.debug("Add contact success :");
 		return Response.status(Status.CREATED).entity(successMessage).build();
 	}
 	
 	@PUT
 	@Path("/{contactId}")
 	public Response updateContact(@PathParam("contactId")Long contactId, Contact contact) {
-		// check for null contact id
 		if (contactId == null) {
-			throw new BadRequestException("Contact can not be updated for the contact id: "+ contactId);
-		}		
+			throw new BadRequestException("Contact Id can not be null:");
+		}
+		boolean updateSuccess = true;
 		contact.setContactId(contactId.longValue());
-		contactService.updateContact(contact);
-		SuccessMessage successMessage = new SuccessMessage(
-				Status.OK.getStatusCode(), "Contact updated successfully :");	
+		updateSuccess = contactService.updateContact(contact);
+		if (!updateSuccess) {
+			throw new DataNotFoundException(
+					"Contact not found and can not be updated for the contact id: "+ contactId);	
+		}
+		
+		SuccessMessage successMessage = new SuccessMessage(Status.OK.getStatusCode(), "Contact updated successfully :");	
+		
+		logger.debug("Update contact success :");
 		return Response.status(Status.OK).entity(successMessage).build();
 	}
 		
@@ -133,10 +144,16 @@ public class ContactResource {
 		if (contactId == null) {
 			throw new DataNotFoundException("Contact with contact id "+ contactId + "not found.");
 		}
-		contactService.removeContact(contactId);
-		SuccessMessage successMessage = new SuccessMessage(
-				Status.NO_CONTENT.getStatusCode(), "Contact deleted successfully :");	
-		return Response.status(Status.NO_CONTENT).entity(successMessage).build();
+		boolean removeSuccess = true;
+		removeSuccess = contactService.removeContact(contactId);
+		
+		if (!removeSuccess) {
+			throw new DataNotFoundException(
+					"Contact not found and can not be removed for the contact id: "+ contactId);
+		}
+		
+		logger.debug("Remove contact success :");
+		return Response.status(Status.NO_CONTENT.getStatusCode()).build();
 	}
 }
 	

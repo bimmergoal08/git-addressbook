@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 
 public class AuthenticationService {
 	
+	private static final transient Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+	
 	public static final String USER_NAME = "addressbook";
 	public static final String PASSWORD = "Green123";
-	
-	private static final transient Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 	
 	public boolean authenticate(String credentials) {
 

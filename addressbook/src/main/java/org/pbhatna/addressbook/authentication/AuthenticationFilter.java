@@ -9,10 +9,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class AuthenticationFilter implements javax.servlet.Filter {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
@@ -35,13 +40,12 @@ public class AuthenticationFilter implements javax.servlet.Filter {
 			boolean authenticationStatus = authenticationService.authenticate(authCredentials);
 
 			if (authenticationStatus) {
-					filter.doFilter(request, response);
+		
+						filter.doFilter(request, response);
 			} else {
 				if (response instanceof HttpServletResponse) {
 					HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 					httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-					httpServletResponse.setContentType(MediaType.APPLICATION_JSON);
-					httpServletResponse.getWriter().print("Not Found:");
 				}
 			}
 		}
