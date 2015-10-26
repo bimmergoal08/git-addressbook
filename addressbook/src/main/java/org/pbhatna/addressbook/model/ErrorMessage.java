@@ -2,6 +2,11 @@ package org.pbhatna.addressbook.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * This class provides a standard error template to map all the
+ * output responses with the error message.
+ */
+
 @XmlRootElement
 public class ErrorMessage {
 	

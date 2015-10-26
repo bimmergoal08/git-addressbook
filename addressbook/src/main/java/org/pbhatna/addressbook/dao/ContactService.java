@@ -12,10 +12,19 @@ import org.pbhatna.addressbook.model.Contact;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Service class interact with the mysql database and take care of all the CRUD
+ * operations.
+ */
 public class ContactService {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(ContactService.class);
 	
+	/**
+	 * Method retrieves all the contact's from Persons table.
+	 * 
+	 * @return list of all the contact's in a database.
+	 */
 	public List<Contact> getContacts() {
 		
 		PreparedStatement stmt = null;
@@ -57,6 +66,19 @@ public class ContactService {
 		return contacts;
 	}
 
+	/**
+	 * Method search for particular contact on the column name and
+	 * the search criteria provided after validating the input.
+	 * The search criteria perform full search on the field. For ex
+	 * If firstname has 'M' anywhere includin(begining and last) spot.
+	 * This can be easily modified if we would like to search with any field
+	 * starting or ending with any sequence of letters.
+	 * 
+	 * @param fieldtype corresponds to column name in the database
+	 * @param search corresponds to the search texts
+	 *  
+	 * @return list of contacts that matches this search criteria.
+	 */
 	public List<Contact> searchContacts(String fieldType, String search) {
 		
 	 	logger.info("searchContacts inputs: "+ "fieldType: "+ fieldType+ " search: "+search);
@@ -103,6 +125,16 @@ public class ContactService {
 		return contacts;
 	}
 	
+	/**
+	 * Method sort the list of contact's on the column name provided by the user,
+	 * along with the order specefied. If no order is specified, then it sort's the
+	 * contact in ascending order by default.
+	 * 
+	 * @param columnName corresponds to the column name in the table
+	 * @param orderBy corresponds to specific order(Ascending or Descending)
+	 *  
+	 * @return list of contacts that matches this sort.
+	 */
 	public List<Contact> sortContacts(String columnName, String orderBy) {
 		
 		logger.info("sortContacts inputs :"+ "columnName: "+ columnName + "orderBy: " + orderBy);
@@ -158,7 +190,14 @@ public class ContactService {
 		return contacts;
 	}
 	
-	
+	/**
+	 * Method updated the existing contact information with any information,
+	 * that might have changed and return the response accordingly.
+	 * 
+	 * @param Contact information that needs to be updated
+	 *  
+	 * @return updated status
+	 */
 	public boolean updateContact(Contact contact) {
 		
 		PreparedStatement stmt = null;
@@ -202,6 +241,14 @@ public class ContactService {
 		return updateStatus;
 	}
 	
+	/**
+	 * Method add's new contact information to the database and return status
+	 * accordingly.
+	 * 
+	 * @param Contact information that needs to be updated
+	 *  
+	 * @return add status
+	 */
 	public boolean addContact(Contact contact) {
 			
 			PreparedStatement stmt = null;
@@ -242,6 +289,14 @@ public class ContactService {
 			return addStatus;
 	}
 	
+	/**
+	 * Method retrieve's contact with the contact id provided by
+	 * the user.
+	 * 
+	 * @param Contact information that needs to be updated
+	 *  
+	 * @return add status
+	 */
 	public Contact getContact(Long id) {
 		
 			PreparedStatement stmt = null;
@@ -305,6 +360,14 @@ public class ContactService {
 		return deletedStatus;
 	}
 	
+	/**
+	 * Method close all the existing open connections. 
+	 * 
+	 * @param ResultSet
+	 * @param PreparedStatement
+	 * @param Connection 
+	 *
+	 */
 	private static void closeConnections(ResultSet rs, PreparedStatement stmt, Connection conn) {
 		
 		if (rs != null) {

@@ -7,15 +7,27 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is responsible for establishing database connection to the Mysql database
+ * with the credential's provided.
+ */
 public class DatabaseConnection {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
 	
+	// Driver information
 	private static final String DRIVER = "com.mysql.jdbc.Driver";
 	private static final String CONNECTION_URL = "jdbc:mysql://localhost/addressbook_db";
+	
+	// Connection credentials
 	private static final String CONNECTION_USER = "root";
 	private static final String CONNECTION_PASSWORD = "";
 	
+	/**
+	 * This method's gets connection object providing connection url,
+	 * username and password for the mysql database. Logs error if connection
+	 * is not successful.
+	 */
 	public static Connection getConnection() throws Exception {
 
 		Connection conn = null;

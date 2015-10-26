@@ -1,5 +1,8 @@
 package org.pbhatna.addressbook.util;
 
+/**
+ * Enum class providing sorting parameter's available
+ */
 public enum Sort {
 		FIRST_NAME("firstname"),
 		LAST_NAME("lastname"),

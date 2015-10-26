@@ -11,6 +11,11 @@ import org.pbhatna.addressbook.model.Contact;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * ContactResourceHelper class to do miscellaneous stuff,like validating input
+ * resources to make sure correct values are provided for the field type.
+ * For ex Name should not contain any number's. 
+ */
 public class ContactResourceHelper {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(ContactResourceHelper.class);
@@ -19,6 +24,14 @@ public class ContactResourceHelper {
 	public static final String VALID_STRING_REGEX = "[a-zA-Z]+"; 
 	public static final String VALID_EMAIL_REGEX = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"; 
 	
+	/**
+	 * Method checks if search criteria is valid and provide boolean
+	 * response accordingly
+	 * 
+	 *  @param context uri information
+	 *  
+	 *  @return boolean value
+	 */
 	public static boolean searchCriteriaValid(UriInfo uriInfo) {
 		boolean valid = false;
 		
@@ -33,10 +46,24 @@ public class ContactResourceHelper {
 		return valid;
 	}
 	
+	/**
+	 * Checks query parameter's to see if search is enabled.
+	 * 
+	 *  @param context uri information
+	 *  
+	 *  @return boolean value
+	 */
 	public static boolean searchEnabled(UriInfo uriInfo) {
 		return !uriInfo.getQueryParameters().isEmpty();
 	}
 	
+	/**
+	 * Validate search column name and value provided before reaching out
+	 * to Mysql database to retrieve information.
+	 * 
+	 * @param context uri information
+	 *  
+	 */
 	public static void validateSearch(UriInfo uriInfo) {
 		if (!searchCriteriaValid(uriInfo)) {
 			throw new BadRequestException("Incorrect searching criteria:");
@@ -47,6 +74,15 @@ public class ContactResourceHelper {
 		}
 	}
 	
+	/**
+	 * Call search service providing correct column name and value being
+	 * searched for.
+	 * 
+	 * @param context uri information
+	 * 
+	 * @return list of contact's as a result of search
+	 *  
+	 */
 	public static List<Contact> getSearch (UriInfo uriInfo) {
 		List<Contact> contacts = null;
 		
@@ -63,6 +99,15 @@ public class ContactResourceHelper {
 		return contacts;
 	}
 	
+	/**
+	 * Method validates the input string based on the type and matches with
+	 * the regular expressions to caught any bad input
+	 * 
+	 * @param context uri information
+	 * 
+	 * @return boolean response
+	 *  
+	 */
 	public static boolean validateInput(UriInfo uriInfo) {
 		boolean valid = true;
 	
@@ -109,19 +154,51 @@ public class ContactResourceHelper {
 		}
 		return valid;	
 	}
-	
+	/**
+	 * Validates input string is an number.
+	 * 
+	 * @param input string
+	 * 
+	 * @return boolean response
+	 *  
+	 */
 	public static boolean validNumber(String number) {
 		return number.matches(VALID_NUMBER_REGEX);
 	}
 	
+	/**
+	 * Validates input string contains only letter's and not number's.
+	 * 
+	 * @param input string
+	 * 
+	 * @return boolean response
+	 *  
+	 */
 	public static boolean validString(String name) {
 		return name.matches(VALID_STRING_REGEX);
 	}
 	
+	/**
+	 * Validates input string contains valid email
+	 * 
+	 * @param input string
+	 * 
+	 * @return boolean response
+	 *  
+	 */
 	public static boolean validEmail(String email) {
 		return email.matches(VALID_EMAIL_REGEX);
 	}
 	
+	/**
+	 * Column mapper for sanity check and make sure right column name is
+	 * provided to the Mysql query.
+	 * 
+	 * @param fieldtype provided by the user
+	 * 
+	 * @return column name
+	 *  
+	 */
 	public static String getColumnName(String fieldType) {
 		String column = "";
 		

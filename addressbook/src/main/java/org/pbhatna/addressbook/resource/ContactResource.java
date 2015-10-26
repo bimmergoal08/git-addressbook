@@ -25,6 +25,14 @@ import org.pbhatna.addressbook.util.ContactResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * Contact resource class, contains all the methods to perform CRUD operation
+ * based on the user request. It produces responses in the JSON and XML format depending
+ * on what user requested for. Currently valid request and response type is registered as
+ * XML and JSON. Could be easily modified to accomodate other format's as well(ex text)
+ */
+
 @Path("/contacts")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -37,6 +45,11 @@ public class ContactResource {
 	
     ContactService contactService = new ContactService();
 	
+    /**
+     * Get all the contact's if search criteria is not provided. If
+     * search criteria is enabled, then it validated the search and search only 
+     * contact's that matches the search criteria.
+     */
 	@GET
 	public List<Contact> getContacts() {
 		List<Contact> contacts = null;
@@ -57,6 +70,9 @@ public class ContactResource {
 		return contacts;
 	}
 	
+	/**
+     * Get contact with the specific contact id.
+     */
 	@GET
 	@Path("/{contactId}")
 	public Response getContact(@PathParam("contactId") long contactId) {
@@ -68,6 +84,10 @@ public class ContactResource {
 		return Response.status(Response.Status.FOUND).entity(contact).build();
 	}
 	
+	/**
+     * Sort contact's on the specific column provided by user and order specefied
+     * by the user.
+     */
 	@GET
 	@Path("/sort")
 	public List<Contact> sortContacts(@BeanParam ContactSortBean contactSortBean) {
@@ -85,6 +105,10 @@ public class ContactResource {
 		return contacts;
 	}
 	
+	/**
+     * Add contact information after validating input information and send appropriate
+     * response message and response code.
+     */
 	@POST
 	public Response addContact(Contact contact) {
 		if (contact == null) {
@@ -103,6 +127,10 @@ public class ContactResource {
 		return Response.status(Status.CREATED).entity(successMessage).build();
 	}
 	
+	/**
+     * Update contact information after validating input information and send appropriate
+     * response message and response code.
+     */
 	@PUT
 	@Path("/{contactId}")
 	public Response updateContact(@PathParam("contactId")Long contactId, Contact contact) {
@@ -122,7 +150,11 @@ public class ContactResource {
 		logger.debug("Update contact success :");
 		return Response.status(Status.OK).entity(successMessage).build();
 	}
-		
+	
+	/**
+     * Remove contact with the specefied contact id if it exists or send back the
+     * appropriate response.
+     */
 	@DELETE
 	@Path("/{contactId}")
 	public Response removeContact(@PathParam("contactId")Long contactId) {

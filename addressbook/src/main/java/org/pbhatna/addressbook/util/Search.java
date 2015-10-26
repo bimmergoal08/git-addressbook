@@ -1,5 +1,8 @@
 package org.pbhatna.addressbook.util;
-
+	
+	/**
+	 * Enum for valid fieldtype which user pass in as a query parameter.
+	 */
 	public enum Search {
 		FIRST_NAME("firstname"),
 		LAST_NAME("lastname"),

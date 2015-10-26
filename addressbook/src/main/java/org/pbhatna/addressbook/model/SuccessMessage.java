@@ -1,5 +1,11 @@
 package org.pbhatna.addressbook.model;
 
+
+/**
+ * This class provides a standard success template to map all the
+ * output responses with the sucess message.
+ */
+
 public class SuccessMessage {
 	
 	private int successCode;

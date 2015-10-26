@@ -2,6 +2,12 @@ package org.pbhatna.addressbook.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * This class store all the attribute values populated as a result of Mysql query.
+ * Also with the jaxb annotation it's get automatically translated to Json while
+ * providing an output to the user.  
+ */
+
 @XmlRootElement
 public class Contact {
 	
@@ -16,10 +22,28 @@ public class Contact {
 	private String zip;
 	private String country;
 	
+	
+	/**
+	 * No args constructor needed for Jaxb marshalling and unmarshalling.
+	 */
 	public Contact() {
 		super();
 	}
-
+	
+	/**
+	 * Parameterized constructor
+	 * 
+	 * @param contactId
+	 * @param firstName
+	 * @param lastName
+	 * @param primaryPhoneNumber
+	 * @param primaryAddress
+	 * @param primaryEmailAddress
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param country
+	 */
 	public Contact(
 			Long contactId, 
 			String firstName,
@@ -115,7 +139,10 @@ public class Contact {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-
+	
+	/**
+	 * Overriden toStrings method
+	 */
 	@Override
 	public String toString() {
 		return "Contact [contactId=" + contactId + ", firstName=" + firstName

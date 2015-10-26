@@ -1,5 +1,8 @@
 package org.pbhatna.addressbook.util;
 
+/**
+ * Enum class that contain's order type
+ */
 public enum Order {
 	
 	ASCENDING("ASC"),

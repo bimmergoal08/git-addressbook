@@ -1,5 +1,8 @@
 package org.pbhatna.addressbook.util;
-
+	
+	/**
+	 * Enum class that contain's column name for the Persons Table.
+	 */
 	public enum Column {
 		
 		FIRST_NAME("FirstName"),
