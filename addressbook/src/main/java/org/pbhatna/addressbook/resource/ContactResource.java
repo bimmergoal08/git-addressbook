@@ -25,8 +25,8 @@ import org.pbhatna.addressbook.exception.DataNotFoundException;
 import org.pbhatna.addressbook.model.Contact;
 import org.pbhatna.addressbook.model.SuccessMessage;
 import org.pbhatna.addressbook.resource.beans.ContactSortBean;
-import org.pbhatna.addressbook.util.InputParameter;
-import org.pbhatna.addressbook.util.ResourceHelper;
+import org.pbhatna.addressbook.util.Search;
+import org.pbhatna.addressbook.util.ContactResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,27 +45,11 @@ public class ContactResource {
 	@GET
 	public List<Contact> getContacts() {
 		List<Contact> contacts = null;
-	
-		MultivaluedMap<String, String> queryParameterMap = uriInfo.getQueryParameters();
 		
-		if (!queryParameterMap.keySet().isEmpty()) { 
-			if (!ResourceHelper.searchValid(queryParameterMap)) {
-				throw new BadRequestException("In correct searching criteria:");
-			}
+		if (ContactResourceHelper.searchEnabled(uriInfo)) {
 			
-			if (!ResourceHelper.inputValid(queryParameterMap)) {
-				throw new BadRequestException("Input value must be string: ");
-			}
-			
-			for (InputParameter input : InputParameter.values()) {
-				for (String key : queryParameterMap.keySet()) {
-					if (input.getValue().contains(queryParameterMap.getFirst(key))) {
-						contacts =  contactService.searchContacts(
-								ResourceHelper.getColumnName(key),
-								queryParameterMap.getFirst(key));
-					}
-				}	
-	 		}
+			ContactResourceHelper.validateSearch(uriInfo);
+			contacts = ContactResourceHelper.getSearch(uriInfo);
 			
 			if (contacts.size() == 0) {
 				throw new DataNotFoundException("Contact not found:");
