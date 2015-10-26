@@ -6,7 +6,11 @@ public enum Sort {
 		EMAIL_ADDRESS("email"),
 		ADDRESS("address"),
 		PHONE_NUMBER("phone"),
-		CONTACT_ID("id");
+		CONTACT_ID("id"),
+		CITY("city"),
+		STATE("state"),
+		ZIP("zip"),
+		COUNTRY("country");
 		
 		private String value;
 

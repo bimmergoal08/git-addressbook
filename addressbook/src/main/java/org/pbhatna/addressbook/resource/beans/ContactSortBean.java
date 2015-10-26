@@ -14,7 +14,7 @@ public class ContactSortBean {
 	private @QueryParam("orderby") String order;
 	
 	public String getSort() {
-		return sort;
+		return this.sort;
 	}
 	
 	public void setSort(String sort) {
@@ -31,7 +31,7 @@ public class ContactSortBean {
 	
 	public String getSortCriteria() {
 		logger.debug("sortBy :" + sort);
-		return sort;
+		return this.sort;
 	}
 
 	public boolean isValid () {
@@ -39,7 +39,7 @@ public class ContactSortBean {
 		
 		// Validate if sortby query parameter matches the searching criteria
 		for (Sort sort: Sort.values()) {
-			if (sort.getValue().equals(this.sort)) {
+			if (sort.getValue().equals(getSort())) {
 				logger.info(sort.getValue() + valid);
 				valid = true;
 			}
@@ -47,7 +47,7 @@ public class ContactSortBean {
 		
 		// Validate if orderby query parameter matches the correct ordering criteria
 		for (Order order: Order.values()) {
-			if (order.getValue().equals(order)) {
+			if (order.getValue().equals(getOrder())) {
 				logger.info(order.getValue() + valid);
 				valid = true;
 			}

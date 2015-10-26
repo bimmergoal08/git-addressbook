@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.pbhatna.addressbook.database.DatabaseConnection;
@@ -38,6 +37,10 @@ public class ContactService {
 				contact.setPrimaryAddress(rs.getString("PrimaryAddress"));
 				contact.setPrimaryEmailAddress(rs.getString("PrimaryEmail"));
 				contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));
+				contact.setCity(rs.getString("City"));
+				contact.setState(rs.getString("State"));
+				contact.setZip(rs.getString("Zip"));
+				contact.setCountry(rs.getString("Country"));
 				contacts.add(contact);
 				counter ++;
 			}
@@ -81,6 +84,10 @@ public class ContactService {
 				contact.setPrimaryAddress(rs.getString("PrimaryAddress"));
 				contact.setPrimaryEmailAddress(rs.getString("PrimaryEmail"));
 				contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));
+				contact.setCity(rs.getString("City"));
+				contact.setState(rs.getString("State"));
+				contact.setZip(rs.getString("Zip"));
+				contact.setCountry(rs.getString("Country"));
 				contacts.add(contact);
 				counter ++;
 			}
@@ -96,7 +103,7 @@ public class ContactService {
 		return contacts;
 	}
 	
-	public Collection<Contact> sortContacts(String columnName, String orderBy) {
+	public List<Contact> sortContacts(String columnName, String orderBy) {
 		
 		logger.info("sortContacts inputs :"+ "columnName: "+ columnName + "orderBy: " + orderBy);
 		
@@ -105,7 +112,7 @@ public class ContactService {
 		ResultSet rs = null;
 		String baseQuery = null;
 		String query = null;
-		Collection<Contact> contacts = new ArrayList<Contact>();
+		List<Contact> contacts = new ArrayList<Contact>();
 		
 		int counter = 0;
 		try {
@@ -130,7 +137,11 @@ public class ContactService {
 				contact.setLastName(rs.getString("LastName"));
 				contact.setPrimaryAddress(rs.getString("PrimaryAddress"));
 				contact.setPrimaryEmailAddress(rs.getString("PrimaryEmail"));
-				contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));				
+				contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));
+				contact.setCity(rs.getString("City"));
+				contact.setState(rs.getString("State"));
+				contact.setZip(rs.getString("Zip"));
+				contact.setCountry(rs.getString("Country"));
 				contacts.add(contact);
 				counter ++;
 			}
@@ -159,7 +170,9 @@ public class ContactService {
 		try {
 			conn = DatabaseConnection.getConnection();
 			query = "UPDATE Persons SET FirstName = ?,LastName = ?,"+ 
-					"PrimaryAddress = ?,PrimaryEmail = ? ,PrimaryPhone= ? where PersonID = ?";
+					"PrimaryAddress = ?,PrimaryEmail = ? ,PrimaryPhone= ?,"+
+					"City = ?,State = ?,Zip = ?,Country = ? " +
+					"where PersonID = ?";
 			
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, contact.getFirstName());
@@ -167,7 +180,11 @@ public class ContactService {
 			stmt.setString(3, contact.getPrimaryAddress());
 			stmt.setString(4, contact.getPrimaryEmailAddress());
 			stmt.setString(5, contact.getPrimaryPhoneNumber());
-			stmt.setLong(6, contact.getContactId().longValue());
+			stmt.setString(6, contact.getCity());
+			stmt.setString(7, contact.getState());
+			stmt.setString(8, contact.getZip());
+			stmt.setString(9, contact.getCountry());
+			stmt.setLong(10, contact.getContactId().longValue());
 			
 			int count = stmt.executeUpdate();
 			if (count > 0) {
@@ -195,8 +212,9 @@ public class ContactService {
 			
 			try {
 				conn = DatabaseConnection.getConnection();
-				query = "INSERT INTO Persons (FirstName, LastName, PrimaryAddress, PrimaryEmail, PrimaryPhone)"+
-						"VALUES (?,?,?,?,?);";
+				query = "INSERT INTO Persons (FirstName, LastName, PrimaryAddress, PrimaryEmail,"
+						+ " PrimaryPhone, City, State, Zip, Country)"+
+						"VALUES (?,?,?,?,?,?,?,?,?);";
 				
 				stmt = conn.prepareStatement(query);
 				stmt.setString(1, contact.getFirstName());
@@ -204,6 +222,11 @@ public class ContactService {
 				stmt.setString(3, contact.getPrimaryAddress());
 				stmt.setString(4, contact.getPrimaryEmailAddress());
 				stmt.setString(5, contact.getPrimaryPhoneNumber());
+				stmt.setString(6, contact.getCity());
+				stmt.setString(7, contact.getState());
+				stmt.setString(8, contact.getZip());
+				stmt.setString(9, contact.getCountry());
+				
 				int count = stmt.executeUpdate();
 				if (count > 0) {
 					addStatus = true;
@@ -240,6 +263,10 @@ public class ContactService {
 					contact.setPrimaryAddress(rs.getString("PrimaryAddress"));
 					contact.setPrimaryEmailAddress(rs.getString("PrimaryEmail"));
 					contact.setPrimaryPhoneNumber(rs.getString("PrimaryPhone"));
+					contact.setCity(rs.getString("City"));
+					contact.setState(rs.getString("State"));
+					contact.setZip(rs.getString("Zip"));
+					contact.setCountry(rs.getString("Country"));
 				} 
 			} catch (SQLException e) {
 				logger.error("SQLException :"+ id + e.getMessage());

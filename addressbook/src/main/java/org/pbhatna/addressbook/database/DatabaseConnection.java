@@ -12,7 +12,7 @@ public class DatabaseConnection {
 	private static final transient Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
 	
 	private static final String DRIVER = "com.mysql.jdbc.Driver";
-	private static final String CONNECTION_URL = "jdbc:mysql://localhost/Contacts";
+	private static final String CONNECTION_URL = "jdbc:mysql://localhost/addressbook_db";
 	private static final String CONNECTION_USER = "root";
 	private static final String CONNECTION_PASSWORD = "";
 	

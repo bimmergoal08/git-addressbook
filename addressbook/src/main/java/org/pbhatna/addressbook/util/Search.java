@@ -5,7 +5,12 @@ package org.pbhatna.addressbook.util;
 		LAST_NAME("lastname"),
 		EMAIL_ADDRESS("email"),
 		ADDRESS("address"),
-		PHONE_NUMBER("phone");
+		PHONE_NUMBER("phone"),
+		ID("id"),
+		CITY("city"),
+		STATE("state"),
+		ZIP("zip"),
+		COUNTRY("country");
 		
 		private String value;
 

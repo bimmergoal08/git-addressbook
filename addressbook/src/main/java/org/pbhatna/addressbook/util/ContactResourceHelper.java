@@ -15,28 +15,9 @@ public class ContactResourceHelper {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(ContactResourceHelper.class);
 	
-	public static String getColumnName(String fieldType) {
-		String column = "";
-		
-		switch(fieldType) {
-			case "firstname": 
-				column = Column.FIRST_NAME.getValue(); 
-				break;
-			case "lastname": 
-				column = Column.LAST_NAME.getValue();
-				break;
-			case "email": 
-				column = Column.EMAIL_ADDRESS.getValue(); 
-				break;
-			case "address": 
-				column = Column.ADDRESS.getValue();
-				break;
-			case "phone": 
-				column = Column.PHONE_NUMBER.getValue(); 
-				break;
-		}
-		return column;
-	}
+	public static final String VALID_NUMBER_REGEX = "\\d+"; 
+	public static final String VALID_STRING_REGEX = "[a-zA-Z]+"; 
+	public static final String VALID_EMAIL_REGEX = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"; 
 	
 	public static boolean searchCriteriaValid(UriInfo uriInfo) {
 		boolean valid = false;
@@ -75,7 +56,7 @@ public class ContactResourceHelper {
 			for (String key : paramMap.keySet()) {
 				if (search.getValue().contains(key)) {
 					ContactService contactService = new ContactService();
-					contacts =  contactService.searchContacts(ContactResourceHelper.getColumnName(key), paramMap.getFirst(key));
+					contacts =  contactService.searchContacts(getColumnName(key), paramMap.getFirst(key));
 				}
 			}	
 		}
@@ -84,48 +65,88 @@ public class ContactResourceHelper {
 	
 	public static boolean validateInput(UriInfo uriInfo) {
 		boolean valid = true;
-		
-		MultivaluedMap<String, String> paramMap = uriInfo.getQueryParameters();
-		
+	
+		MultivaluedMap<String, String> paramMap = uriInfo.getQueryParameters();		
 		if(paramMap.getFirst(Search.FIRST_NAME.getValue()) != null) {
 			if (!validString(paramMap.getFirst(Search.FIRST_NAME.getValue()))) {
 				valid = false; 
-				logger.info("firstname :" + valid);
 			}
 		}
-		
 		if(paramMap.getFirst(Search.LAST_NAME.getValue()) != null) {
 			if (!validString(paramMap.getFirst(Search.LAST_NAME.getValue()))) {
 				valid = false;
-				logger.info("lastname :" + valid);
 			}
 		}
-		
 		if(paramMap.getFirst(Search.PHONE_NUMBER.getValue()) != null) {
 			if (!validNumber(paramMap.getFirst(Search.PHONE_NUMBER.getValue()))) {
 				valid = false; 
-				logger.info("phonenumber :" + valid);
 			}
 		}
-		
 		if(paramMap.getFirst(Search.EMAIL_ADDRESS.getValue()) != null) {
 			if (!validEmail(paramMap.getFirst(Search.EMAIL_ADDRESS.getValue()))) {
 				valid = false;
-				logger.info("email :" + valid);
+			}
+		}
+		if(paramMap.getFirst(Search.CITY.getValue()) != null) {
+			if (!validString(paramMap.getFirst(Search.CITY.getValue()))) {
+				valid = false;
+			}
+		}
+		if(paramMap.getFirst(Search.STATE.getValue()) != null) {
+			if (!validString(paramMap.getFirst(Search.STATE.getValue()))) {
+				valid = false;
+			}
+		}
+		if(paramMap.getFirst(Search.COUNTRY.getValue()) != null) {
+			if (!validString(paramMap.getFirst(Search.COUNTRY.getValue()))) {
+				valid = false;
+			}
+		}
+		if(paramMap.getFirst(Search.ZIP.getValue()) != null) {
+			if (!validNumber(paramMap.getFirst(Search.ZIP.getValue()))) {
+				valid = false;
 			}
 		}
 		return valid;	
 	}
 	
 	public static boolean validNumber(String number) {
-		return number.matches("\\d+");
+		return number.matches(VALID_NUMBER_REGEX);
 	}
 	
 	public static boolean validString(String name) {
-		return name.matches("[a-zA-Z]+");
+		return name.matches(VALID_STRING_REGEX);
 	}
 	
 	public static boolean validEmail(String email) {
-		return email.matches("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+		return email.matches(VALID_EMAIL_REGEX);
+	}
+	
+	public static String getColumnName(String fieldType) {
+		String column = "";
+		
+		switch(fieldType) {
+			case "firstname": column = Column.FIRST_NAME.getValue(); 
+				break;
+			case "lastname": column = Column.LAST_NAME.getValue();
+				break;
+			case "email": column = Column.EMAIL_ADDRESS.getValue(); 
+				break;
+			case "address": column = Column.ADDRESS.getValue();
+				break;
+			case "phone": column = Column.PHONE_NUMBER.getValue(); 
+				break;
+			case "id": column = Column.CONTACT_ID.getValue();
+				break;
+			case "city": column = Column.CITY.getValue();
+				break;
+			case "state": column = Column.STATE.getValue();
+				break;
+			case "country": column = Column.COUNTRY.getValue();
+				break;
+			case "zip": column = Column.ZIP.getValue();
+				break;
+		}
+		return column;
 	}
 }

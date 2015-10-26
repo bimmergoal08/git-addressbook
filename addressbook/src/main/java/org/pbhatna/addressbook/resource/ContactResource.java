@@ -1,8 +1,6 @@
 package org.pbhatna.addressbook.resource;
 
-import java.util.Collection;
 import java.util.List;
-
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,18 +12,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-
 import org.pbhatna.addressbook.dao.ContactService;
 import org.pbhatna.addressbook.exception.BadRequestException;
 import org.pbhatna.addressbook.exception.DataNotFoundException;
 import org.pbhatna.addressbook.model.Contact;
 import org.pbhatna.addressbook.model.SuccessMessage;
 import org.pbhatna.addressbook.resource.beans.ContactSortBean;
-import org.pbhatna.addressbook.util.Search;
 import org.pbhatna.addressbook.util.ContactResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,13 +70,19 @@ public class ContactResource {
 	
 	@GET
 	@Path("/sort")
-	public Collection<Contact> sortContacts(@BeanParam ContactSortBean contactSortBean) {
+	public List<Contact> sortContacts(@BeanParam ContactSortBean contactSortBean) {
 		if (!contactSortBean.isValid()) {
-			throw new BadRequestException("Invalid sort criteria for :" + contactSortBean.getSort() + 
-					" and orderby :" + contactSortBean.getOrder());
+			throw new BadRequestException("Invalid sort criteria :");
 		}
+		List<Contact> contacts = null;
+		contacts = contactService.sortContacts(
+				ContactResourceHelper.getColumnName(contactSortBean.getSort()),contactSortBean.getOrder());
+		if (contacts.size() == 0) {
+			throw new DataNotFoundException("Please provide valid input for sorting: ");
+		}
+		
 		logger.debug("Sort contact success :");
-		return contactService.sortContacts(contactSortBean.getSort(), contactSortBean.getOrder());
+		return contacts;
 	}
 	
 	@POST

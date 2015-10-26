@@ -11,18 +11,26 @@ public class Contact {
 	private String primaryPhoneNumber;
 	private String primaryAddress;
 	private String primaryEmailAddress;
+	private String city;
+	private String state;
+	private String zip;
+	private String country;
 	
 	public Contact() {
 		super();
 	}
-	
+
 	public Contact(
-			Long contactId,
+			Long contactId, 
 			String firstName,
 			String lastName,
 			String primaryPhoneNumber,
 			String primaryAddress,
-			String primaryEmailAddress
+			String primaryEmailAddress,
+			String city,
+			String state,
+			String zip,
+			String country
 	) {
 		super();
 		this.contactId = contactId;
@@ -31,8 +39,12 @@ public class Contact {
 		this.primaryPhoneNumber = primaryPhoneNumber;
 		this.primaryAddress = primaryAddress;
 		this.primaryEmailAddress = primaryEmailAddress;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.country = country;
 	}
-
+	
 	public Long getContactId() {
 		return contactId;
 	}
@@ -72,12 +84,46 @@ public class Contact {
 		this.primaryEmailAddress = primaryEmailAddress;
 	}
 
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+	
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+	
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
 	@Override
 	public String toString() {
 		return "Contact [contactId=" + contactId + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", primaryPhoneNumber="
 				+ primaryPhoneNumber + ", primaryAddress=" + primaryAddress
-				+ ", primaryEmailAddress=" + primaryEmailAddress + "]";
+				+ ", primaryEmailAddress=" + primaryEmailAddress + ", city="
+				+ city + ", state=" + state + ", zip=" + zip + ", country="
+				+ country + "]";
 	}
 
 }

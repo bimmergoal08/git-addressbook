@@ -7,7 +7,11 @@ package org.pbhatna.addressbook.util;
 		EMAIL_ADDRESS("PrimaryEmail"),
 		ADDRESS("PrimaryAddress"),
 		PHONE_NUMBER("PrimaryPhone"),
-		CONTACT_ID("PersonID");
+		CONTACT_ID("PersonID"),
+		CITY("City"),
+		STATE("State"),
+		ZIP("Zip"),
+		COUNTRY("Country");
 		
 		private String value;
 
